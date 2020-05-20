@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.cody.fly.core.CoreAction;
@@ -22,8 +21,6 @@ import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * Created by cody.yi on 2017/1/19.
@@ -60,7 +57,7 @@ public class LocalRouter {
         }
     }
 
-    public static synchronized LocalRouter getInstance(@NonNull CoreApplication context) {
+    public static synchronized LocalRouter getInstance(CoreApplication context) {
         if (sInstance == null) {
             sInstance = new LocalRouter(context);
         }
@@ -78,7 +75,7 @@ public class LocalRouter {
         Intent binderIntent = new Intent(mApplication, WideRouterConnectService.class);
         Bundle bundle = new Bundle();
         binderIntent.putExtras(bundle);
-        mApplication.bindService(binderIntent, mServiceConnection, BIND_AUTO_CREATE);
+        mApplication.bindService(binderIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     void disconnectWideRouter() {
@@ -114,7 +111,7 @@ public class LocalRouter {
      * @param routerRequest 路由请求
      * @return 结果
      */
-    boolean answerWiderAsync(@NonNull RouterRequest routerRequest) {
+    boolean answerWiderAsync(RouterRequest routerRequest) {
         boolean result;
         if (mProcessName.equals(routerRequest.getDomain()) && checkWideRouterConnection()) {
             result = findRequestAction(routerRequest).isAsync(mApplication, routerRequest.getData());
@@ -124,7 +121,7 @@ public class LocalRouter {
         return result;
     }
 
-    public RouterResponse route(Context context, @NonNull RouterRequest routerRequest) throws Exception {
+    public RouterResponse route(Context context, RouterRequest routerRequest) throws Exception {
 //        Log.e(TAG, mProcessName+", start: "+System.currentTimeMillis()+"\n"+routerRequest.toString());
         RouterResponse routerResponse = new RouterResponse();
         // Local request
